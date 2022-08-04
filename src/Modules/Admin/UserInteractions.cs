@@ -22,7 +22,7 @@ namespace NinjaBotCore.Modules.Admin
         {
             _logger = services.GetRequiredService<ILogger<UserInteraction>>();
             services.GetRequiredService<DiscordShardedClient>().UserJoined += HandleGreeting;
-            services.GetRequiredService<DiscordShardedClient>().UserLeft += HandleParting;
+            //services.GetRequiredService<DiscordShardedClient>().UserLeft += HandleParting;
             _logger.LogInformation($"UserInteractions loaded");
         }
 
@@ -77,7 +77,7 @@ namespace NinjaBotCore.Modules.Admin
             });
         }
 
-        private async Task HandleParting(SocketGuildUser user)
+        private async Task HandleParting(SocketGuild guild, SocketGuildUser user)
         {
             await Task.Run(async () =>
             {                

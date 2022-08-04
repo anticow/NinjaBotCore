@@ -9,6 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Serilog;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Sqlite;
+
 
 namespace NinjaBotCore
 {
@@ -17,7 +21,7 @@ namespace NinjaBotCore
         public static void Main(string[] args)
         {
             try
-            {                
+            {
                 new NinjaBot().StartAsync().GetAwaiter().GetResult();       
             }
             catch (Exception ex)
@@ -25,5 +29,7 @@ namespace NinjaBotCore
                 Console.WriteLine(ex.Message);
             }
         }
+
+
     }
 }

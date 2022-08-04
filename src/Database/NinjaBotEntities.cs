@@ -37,10 +37,11 @@ namespace NinjaBotCore.Database
         public virtual DbSet<WowMChar> WowMChar { get; set; }
         public virtual DbSet<WordList> WordList { get; set; }
         public virtual DbSet<WowClassicGuild> WowClassicGuild { get; set; }
+        public virtual DbSet<Rando> RandoList { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var connectionStringBuilder = new SqliteConnectionStringBuilder { DataSource = "ninjabot.db" };
+            var connectionStringBuilder = new SqliteConnectionStringBuilder { DataSource = "C:\\Users\\grife.COWGOMU\\Source\\Repos\\NinjaBotCore\\src\\ninjabot.db" };
             var connectionString = connectionStringBuilder.ToString();
             var connection = new SqliteConnection(connectionString);
 

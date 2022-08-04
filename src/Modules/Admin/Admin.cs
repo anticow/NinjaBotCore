@@ -329,7 +329,7 @@ namespace NinjaBotCore.Modules.Admin
             var embed = new EmbedBuilder();
             embed.ThumbnailUrl = Context.Guild.IconUrl;
             StringBuilder sb = new StringBuilder();
-            var currentBans = await Context.Guild.GetBansAsync();
+            var currentBans = await Context.Guild.GetBansAsync().FlattenAsync().ConfigureAwait(false);
             var bannedUser = currentBans.Where(c => c.User.Username.Contains(user)).FirstOrDefault();
             if (bannedUser != null)
             {
@@ -366,7 +366,7 @@ namespace NinjaBotCore.Modules.Admin
             try
             {
                 embed.Title = $"User bans on {Context.Guild.Name}";
-                var bans = await Context.Guild.GetBansAsync();
+                List<IBan> bans = await Context.Guild.GetBansAsync().FlattenAsync().ConfigureAwait(false) as List<IBan>;
                 if (bans.Count > 0)
                 {
                     foreach (var ban in bans)
