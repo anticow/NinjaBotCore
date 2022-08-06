@@ -4,12 +4,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NinjaBotCore.Database
 {
-    public partial class Rando
+    public partial class Randos
     {
-        [Key]
+        
         public string ListName { get; set; }
         public string ListItem { get; set; }
-        public int ListId { get; set; }
+        [Key]
+        public Guid ListId { get; set; }
         public int ListWeight { get; set; }
         public int NumberOfPlayers { get; set; }
         public Nullable<long> ServerId { get; set; }

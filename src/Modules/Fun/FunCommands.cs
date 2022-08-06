@@ -214,5 +214,29 @@ namespace NinjaBotCore.Modules.Fun
             embed.Description = sb.ToString();
             await _cc.Reply(Context, embed);
         }
+
+        [Command("roll", RunMode = RunMode.Async)]
+        [Alias("random")]
+        [Summary("roll for a random number default between 1 and 100")]
+        public async Task roll()
+        {
+            var embed = new EmbedBuilder();
+            StringBuilder sb = new StringBuilder();
+
+            embed.Title = $"rolled another";
+            embed.ThumbnailUrl = Context.User.GetAvatarUrl();
+            embed.WithColor(new Color(0, 0, 255));
+
+            var helpTxt = await System.IO.File.ReadAllLinesAsync("help.txt");
+
+            foreach (var line in helpTxt)
+            {
+                sb.AppendLine(line).Replace('!', Char.Parse(_prefix));
+            }
+
+            embed.Description = sb.ToString();
+            await _cc.Reply(Context, embed);
+        }
+
     }
 }

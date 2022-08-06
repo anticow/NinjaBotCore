@@ -94,7 +94,9 @@ namespace NinjaBotCore
                 .AddSingleton<RaiderIOApi>()
                 .AddSingleton<YouTubeApi>()                
                 .AddSingleton<AudioService>()
-                .AddSingleton<LoggingService>();                   
+                .AddScoped<Randos>()
+                .AddSingleton<LoggingService>();
+                
                         
             //Add logging      
             ConfigureServices(services);    

@@ -37,7 +37,7 @@ namespace NinjaBotCore.Database
         public virtual DbSet<WowMChar> WowMChar { get; set; }
         public virtual DbSet<WordList> WordList { get; set; }
         public virtual DbSet<WowClassicGuild> WowClassicGuild { get; set; }
-        public virtual DbSet<Rando> RandoList { get; set; }
+        public virtual DbSet<Randos> Randos { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
