@@ -80,13 +80,51 @@ namespace NinjaBotCore.Modules.Roll
             embed.Title = $"[{user.Username}] has Rolled the dice!";
             embed.Description = sb.ToString();
             embed.WithColor(new Color(0, 255, 0));
+            int total = 0;
             for (int i = 0; i < countOfDice; i++)
             {
-                sb.AppendLine($"{die} shows: {random.Next(1, ((int)die))}");
+                int currentDie = random.Next(1, (int)die);
+                sb.AppendLine($"**{die}** shows: {currentDie}");
+                total += currentDie;
             }
+            sb.AppendLine($"Total count from die rolls **{total}**");
             embed.Description = sb.ToString();
             await _cc.Reply(Context, embed);
         }
+        [Command("roll-dice", RunMode = RunMode.Async)]
+        [Alias("dice")]
+        [Summary("Roll the dice, number of dice, and side count 2,4,6,8,10,12,20,100; E.G. !dice 1D4")]
+        public async Task roll(string die)
+        {
+            StringBuilder sb = new StringBuilder();
+            var random = new Random();
+            var user = Context.User;
+
+            dice dieType = new dice();
+            ISocketMessageChannel messageChannel = null;
+            if (Int32.TryParse(die.FirstFromSplit('d'), out int countOfDice))
+            {
+                var thisDice = die.Split(countOfDice.ToString())[1];
+                if (Enum.IsDefined(typeof(dice),thisDice.ToUpper())) 
+                    dieType = Enum.Parse<dice>(thisDice.ToUpper());
+            }
+            //var countOfDice = integer.par ;
+            var embed = new EmbedBuilder();
+            embed.Title = $"[{user.Username}] has Rolled the dice!";
+            embed.Description = sb.ToString();
+            embed.WithColor(new Color(0, 255, 0));
+            int total = 0;
+            for (int i = 0; i < countOfDice; i++)
+            {
+                int currentDie = random.Next(1, (int)dieType);
+                sb.AppendLine($"**{die.Split(countOfDice.ToString())[1].ToUpper()}** shows: **{currentDie}**");
+                total += currentDie;
+            }
+            sb.AppendLine($"Total count from die rolls: **{total}**");
+            embed.Description = sb.ToString();
+            await _cc.Reply(Context, embed);
+        }
+
         [Command("roll", RunMode = RunMode.Async)]
         [Alias("random")]
         [Summary("Generates a random roll of the dice")]

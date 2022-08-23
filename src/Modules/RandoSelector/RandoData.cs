@@ -18,36 +18,18 @@ namespace NinjaBotCore.Modules.RandoSelector
                 if (db.Randos.Where(a => a.ListName == listName).FirstOrDefault() != null)
                 {
                     var listOfRandos = db.Randos.Where(a => a.ListName == listName).ToList();
-                    var specificItem = listOfRandos.Where((a) => a.ListItem == listItem).First();
-                    if (specificItem != null)
-                    {
-                        // found this item within the referenced list
-                        //specificItem.ListId = specificItem.ListId;
-                        specificItem.ListName = listName;
-                        specificItem.ListItem = listItem;
-                        specificItem.ListWeight = listItemWeight;
-                        specificItem.AddedBy = userName;
-                        specificItem.NumberOfPlayers = numberOfPlayers;
-                        specificItem.TimeSet = DateTime.Now;
-                        db.Randos.Update(specificItem);
-                        db.SaveChanges();
-
-                    }
-                    else
-                    {
-                        // no item found but the list is present so now populating
-                        rando.ListId = new Guid();
-
-                        rando.ListName = listName;
-                        rando.ListItem = listItem;
-                        rando.ListWeight = listItemWeight;
-                        rando.AddedBy = userName;
-                        rando.NumberOfPlayers = numberOfPlayers;
-                        rando.TimeSet = DateTime.Now;
-                        db.Randos.Add(rando);
-                        db.SaveChanges();
-                    }
-
+                    Randos specificItem = new Randos();
+                    bool update = true;
+                    try { specificItem = listOfRandos.Where((a) => a.ListItem == listItem).First(); }
+                    catch (System.InvalidOperationException ex) { update = false; }
+                    specificItem.ListName = listName;
+                    specificItem.ListItem = listItem;
+                    specificItem.ListWeight = listItemWeight;
+                    specificItem.AddedBy = userName;
+                    specificItem.NumberOfPlayers = numberOfPlayers;
+                    specificItem.TimeSet = DateTime.Now;
+                    db.Randos.Update(specificItem);
+                    db.SaveChanges();
                 }
                 else
                 {
@@ -59,7 +41,6 @@ namespace NinjaBotCore.Modules.RandoSelector
                     rando.TimeSet = DateTime.Now;
                     db.Randos.Add(rando);
                     db.SaveChanges();
-
                 }
             }
 
@@ -116,14 +97,57 @@ namespace NinjaBotCore.Modules.RandoSelector
                 //rando = db.Randos.Where(a => a.ListName == listName).FirstOrDefault();
                 var listOfRandos = db.Randos.Where(a => a.ListName == listName).ToList();
                 var speicificRando = from someRando in listOfRandos
-                             where someRando.ListItem == listItem
-                             where someRando.NumberOfPlayers == playerCount
-                             select someRando;
+                                     where someRando.ListItem == listItem
+                                     where someRando.NumberOfPlayers == playerCount
+                                     select someRando;
+
+                return speicificRando.First();
+
+            }
+        }
+        public Randos getFullItemContext(Guid guid)
+        {
+            var rando = new Randos();
+            using (var db = new NinjaBotEntities())
+            {
+                //rando = db.Randos.Where(a => a.ListName == listName).FirstOrDefault();
+                var listOfRandos = db.Randos.Where(a => a.ListId == guid).ToList();
+                var speicificRando = from someRando in listOfRandos
+                                     select someRando;
 
                 return speicificRando.First();
 
             }
         }
 
+        public List<Randos> getItemList(string listName)
+        {
+            var rando = new Randos();
+            using (var db = new NinjaBotEntities())
+            {
+                var listOfRandos = db.Randos.Where(a => a.ListName == listName).ToList();
+                return listOfRandos;
+                //rando = db.Randos.Where(a => a.ListName == listName).FirstOrDefault();
+
+            }
+        }
+        public Dictionary<string,int> getItemList()
+        {
+            var rando = new Randos();
+            using (var db = new NinjaBotEntities())
+            {
+                var listItem = db.Randos.ToList();
+                var query =
+                    from ListName in listItem
+                    group ListName by ListName.ListName;
+                Dictionary<string, int> result = new Dictionary<string, int>();
+                foreach (var item in query)
+                {
+                    result.Add(item.Key, item.Count());
+                }
+
+                return result;
+            }
+        }
     }
 }

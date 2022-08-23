@@ -47,16 +47,15 @@ namespace NinjaBotCore.Modules.RandoSelector
             try
             {
                 var randoResult = randoData.getRandomFromList(args, null);
-                sb.AppendLine($"Rando has decreed that **{randoResult}** is for you!");
-                await _cc.Reply(Context, sb.ToString());
+                sb.AppendLine($"**{randoResult}** is for you!");
+                displayMessage(sb, $"Some Rando has decreed:");
 
             }
             catch (Exception ex)
             {
 
-                sb.AppendLine($"Something collecting from the database for list {args} :(");
                 _logger.LogError($"Rando Insert command error {ex.Message}");
-                await _cc.Reply(Context, sb.ToString());
+                displayMessage(sb, $"Something collecting from the database for list {args}:");
 
             }
 
@@ -75,16 +74,15 @@ namespace NinjaBotCore.Modules.RandoSelector
             try
             {
                 var randoResult = randoData.getRandomFromList(itemName, numberOfPlayers);
-                sb.AppendLine($"Rando has decreed that **{randoResult}** is for you!");
-                await _cc.Reply(Context, sb.ToString());
+                sb.AppendLine($"**{randoResult}** is for you!");
+                displayMessage(sb, $"Some Rando has decreed:");
 
             }
             catch (Exception ex)
             {
 
-                sb.AppendLine($"Something collecting from the database for list {itemName} :(");
                 _logger.LogError($"Rando Insert command error {ex.Message}");
-                await _cc.Reply(Context, sb.ToString());
+                displayMessage(sb, $"Something collecting from the database for list {itemName}:");
 
             }
 
@@ -114,12 +112,11 @@ namespace NinjaBotCore.Modules.RandoSelector
             var itemWeight = 0;
             if (splitArgs.Length < 4)
             {
-                sb.AppendLine("Adding to the List requires 4 input;");
                 sb.AppendLine("List Name,");
                 sb.AppendLine("List Item to add,");
                 sb.AppendLine("Weight of item, the higher the value the more often it will appear");
                 sb.AppendLine("Number of players");
-                await _cc.Reply(Context, sb.ToString());
+                displayMessage(sb, $"Adding to the List requires 4 input;");
 
             }
             else
@@ -129,18 +126,16 @@ namespace NinjaBotCore.Modules.RandoSelector
                 bool successWeight = int.TryParse(splitArgs[2], out weight);
                 if (!successWeight)
                 {
-                    sb.AppendLine("item weight invalid");
                     failure = true;
-                    await _cc.Reply(Context, sb.ToString());
+                    displayMessage(sb, $"Item Weight invalid {splitArgs[2]}");
 
                 }
                 int playerCount;
-                bool playersInt = int.TryParse(splitArgs[2], out playerCount);
+                bool playersInt = int.TryParse(splitArgs[3], out playerCount);
                 if (!playersInt)
                 {
-                    sb.AppendLine("player count invalid");
                     failure = true;
-                    await _cc.Reply(Context, sb.ToString());
+                    displayMessage(sb, $"Player count invalid {splitArgs[3]}");
 
                 }
 
@@ -157,7 +152,7 @@ namespace NinjaBotCore.Modules.RandoSelector
                     sb.AppendLine("Weight of item, the higher the value the more often it will appear");
                     sb.AppendLine("Number of players");
 
-                    await _cc.Reply(Context, sb.ToString());
+                    displayMessage(sb, $"Adding to list requires the following");
 
                 }
 
@@ -181,17 +176,17 @@ namespace NinjaBotCore.Modules.RandoSelector
 
                 randoData.setRandomToList(listName, itemName, itemWeight, playerCount, user.Username);
 
-                sb.AppendLine($"List Name, {listName} has been added!");
+                sb.AppendLine($"{itemName} has been added!");
 
-                await _cc.Reply(Context, sb.ToString());
+                displayMessage(sb, $"Adding to List {listName}");
 
             }
             catch (Exception ex)
             {
                 StringBuilder sb = new StringBuilder();
-                sb.AppendLine("Something went adding to the rando list :(");
+                sb.AppendLine($"Something went adding to the rando list: {ex.Message}");
                 _logger.LogError($"Rando Insert command error {ex.Message}");
-                await _cc.Reply(Context, sb.ToString());
+                displayMessage(sb, $"Error adding to list");
 
             }
         }
@@ -209,7 +204,7 @@ namespace NinjaBotCore.Modules.RandoSelector
             sb.AppendLine("List Item to add,");
             sb.AppendLine("Weight of item, the higher the value the more often it will appear");
             sb.AppendLine("Number of players");
-            await _cc.Reply(Context, sb.ToString());
+            displayMessage(sb, $"List addition requires:");
 
         }
 
@@ -229,7 +224,39 @@ namespace NinjaBotCore.Modules.RandoSelector
             sb.AppendLine($"Item PlayerCount: {details.NumberOfPlayers}");
             sb.AppendLine($"Item included in list: {details.ListName}");
             //await _cc.Reply(Context, sb.ToString());
-            DisplayMessage(sb, $"Details of Item in list {listName}");
+            displayMessage(sb, $"Details of Item in list {listName}");
+        }
+        [Command("rando-list", RunMode = RunMode.Async)]
+        [Alias("rando-list")]
+        [Summary("Generates a random selection based on a pre-determined list")]
+        public async Task getRandoList(string listName)
+        {
+            StringBuilder sb = new StringBuilder();
+            var rando1 = new Rando();
+            var randoReturn = rando1.getItemList(listName);
+                          
+            foreach (var rando in randoReturn)
+            {
+                sb.AppendLine($"Item Name: **{rando.ListItem}** \r\n[Player Count: {rando.NumberOfPlayers}], [Item Weight: {rando.ListWeight}]");
+            }
+            displayMessage(sb, $"List: {listName} contains {randoReturn.Count} items");
+
+        }
+        [Command("rando-list", RunMode = RunMode.Async)]
+        [Alias("rando-list")]
+        [Summary("Generates a random selection based on a pre-determined list")]
+        public async Task getRandoList()
+        {
+            StringBuilder sb = new StringBuilder();
+            var rando1 = new Rando();
+            var randoReturn = rando1.getItemList();
+
+            foreach (var rando in randoReturn)
+            {
+                sb.AppendLine($"List Name: **{rando.Key}** [Item Count: {rando.Value}]");
+            }
+            displayMessage(sb, $"There are {randoReturn.Count} lists");
+
         }
 
         [Command("rando-remove", RunMode = RunMode.Async)]
@@ -242,11 +269,11 @@ namespace NinjaBotCore.Modules.RandoSelector
             var itemGuid = new Guid(guidValue);
             rando.removeRandomFromList(itemGuid);
             sb.AppendLine($"item removed");
-            await _cc.Reply(Context, sb.ToString());
+            displayMessage(sb, $"{rando.getFullItemContext(itemGuid).ListItem} removed");
 
         }
 
-        public void DisplayMessage(StringBuilder sb, string title)
+        public void displayMessage(StringBuilder sb, string title)
         {
             var embed = new EmbedBuilder();
             embed.Title = title;

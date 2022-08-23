@@ -237,6 +237,31 @@ namespace NinjaBotCore.Modules.Fun
             embed.Description = sb.ToString();
             await _cc.Reply(Context, embed);
         }
+        [Command("moo", RunMode = RunMode.Async)]
+        [Alias("moocow")]
+        [Summary("The cow says")]
+        public async Task moo()
+        {
+            var embed = new EmbedBuilder();
+            StringBuilder sb = new StringBuilder();
+            List<string> variousMoo = new List<string>()
+            {
+                "moo","Moo","MOOOOO","Moo","moo","MOOOO!","Meow"
+            };
+            embed.Title = $"Moo";
+            embed.ThumbnailUrl = Context.User.GetAvatarUrl();
+            embed.WithColor(new Color(0, 0, 255));
+
+            var helpTxt = await System.IO.File.ReadAllLinesAsync("help.txt");
+
+            foreach (var line in helpTxt)
+            {
+                sb.AppendLine(line).Replace('!', Char.Parse(_prefix));
+            }
+
+            embed.Description = sb.ToString();
+            await _cc.Reply(Context, embed);
+        }
 
     }
 }

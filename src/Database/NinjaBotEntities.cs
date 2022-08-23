@@ -41,7 +41,7 @@ namespace NinjaBotCore.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var connectionStringBuilder = new SqliteConnectionStringBuilder { DataSource = "C:\\Users\\grife.COWGOMU\\Source\\Repos\\NinjaBotCore\\src\\ninjabot.db" };
+            var connectionStringBuilder = new SqliteConnectionStringBuilder { DataSource = ".\\ninjabot.db" };
             var connectionString = connectionStringBuilder.ToString();
             var connection = new SqliteConnection(connectionString);
 
