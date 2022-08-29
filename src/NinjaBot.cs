@@ -46,7 +46,7 @@ namespace NinjaBotCore
                 .SetBasePath(AppContext.BaseDirectory)
                 .AddJsonFile(path: "config.json");            
             _config = _builder.Build();
-            
+
             //Configure services
             var services = new ServiceCollection()
                 .AddSingleton(new DiscordShardedClient(new DiscordSocketConfig
@@ -96,6 +96,7 @@ namespace NinjaBotCore
                 .AddSingleton<AudioService>()
                 .AddScoped<Randos>()
                 .AddSingleton<LoggingService>();
+
                 
                         
             //Add logging      

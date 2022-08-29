@@ -3,9 +3,13 @@ namespace NinjaBotCore.Database
     using System;
     using Microsoft.Data.Sqlite;
     using Microsoft.EntityFrameworkCore;
+    using Microsoft.EntityFrameworkCore.SqlServer;
+    using Microsoft.Extensions.Configuration;
 
     public partial class NinjaBotEntities : DbContext
     {
+        private IConfigurationRoot _config;
+
         public virtual DbSet<RlStat> RlStats { get; set; }
         public virtual DbSet<RlUserStat> RlUserStats { get; set; }
         public virtual DbSet<TriviaQuestion> TriviaQuestion { get; set; }
@@ -41,11 +45,17 @@ namespace NinjaBotCore.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            var connectionStringBuilder = new SqliteConnectionStringBuilder { DataSource = ".\\ninjabot.db" };
-            var connectionString = connectionStringBuilder.ToString();
-            var connection = new SqliteConnection(connectionString);
+            var _builder = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile(path: "config.json");
+            _config = _builder.Build();
 
-            optionsBuilder.UseSqlite(connection);
+            //var connectionStringBuilder = new  SqliteConnectionStringBuilder { DataSource = ".\\ninjabot.db" };
+            //var connectionString = connectionStringBuilder.ToString();
+            //var connection = new SqliteConnection(connectionString);
+
+            optionsBuilder.UseSqlServer(_config["sqlConnectionString"]);// UseSqlite(connection);
+            
         }
     }
 }

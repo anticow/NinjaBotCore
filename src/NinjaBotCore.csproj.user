@@ -3,5 +3,9 @@
   <PropertyGroup>
     <_LastSelectedProfileId>C:\Users\grife.COWGOMU\source\repos\NinjaBotCore\src\Properties\PublishProfiles\NinjaBotCore20220730215947 - Web Deploy.pubxml</_LastSelectedProfileId>
     <NameOfLastUsedPublishProfile>NinjaBotCore20220730215947 - Web Deploy</NameOfLastUsedPublishProfile>
+    <ActiveDebugProfile>NinjaBotCore</ActiveDebugProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
 </Project>

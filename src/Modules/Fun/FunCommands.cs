@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using NinjaBotCore.Services;
+using NinjaBotCore.Modules.Giphy;
 
 namespace NinjaBotCore.Modules.Fun
 {
@@ -215,52 +216,38 @@ namespace NinjaBotCore.Modules.Fun
             await _cc.Reply(Context, embed);
         }
 
-        [Command("roll", RunMode = RunMode.Async)]
-        [Alias("random")]
-        [Summary("roll for a random number default between 1 and 100")]
-        public async Task roll()
-        {
-            var embed = new EmbedBuilder();
-            StringBuilder sb = new StringBuilder();
-
-            embed.Title = $"rolled another";
-            embed.ThumbnailUrl = Context.User.GetAvatarUrl();
-            embed.WithColor(new Color(0, 0, 255));
-
-            var helpTxt = await System.IO.File.ReadAllLinesAsync("help.txt");
-
-            foreach (var line in helpTxt)
-            {
-                sb.AppendLine(line).Replace('!', Char.Parse(_prefix));
-            }
-
-            embed.Description = sb.ToString();
-            await _cc.Reply(Context, embed);
-        }
         [Command("moo", RunMode = RunMode.Async)]
         [Alias("moocow")]
         [Summary("The cow says")]
         public async Task moo()
         {
-            var embed = new EmbedBuilder();
             StringBuilder sb = new StringBuilder();
+            var random = new Random();
+            ImageText imageText = new ImageText();
+            var guild = _client.Guilds.FirstOrDefault();
+            var channel = guild.TextChannels.Single(ch => ch.Name == "botblather");
+
             List<string> variousMoo = new List<string>()
             {
                 "moo","Moo","MOOOOO","Moo","moo","MOOOO!","Meow"
             };
-            embed.Title = $"Moo";
-            embed.ThumbnailUrl = Context.User.GetAvatarUrl();
-            embed.WithColor(new Color(0, 0, 255));
+            var listResponse = variousMoo.ElementAt(random.Next(0, variousMoo.Count));
+            var imageUrl = imageText.CreateTextInShape(listResponse);
 
-            var helpTxt = await System.IO.File.ReadAllLinesAsync("help.txt");
+            var picture = await Context.Channel.SendFileAsync(imageUrl);
+            string imgurl = picture.Attachments.First().Url;
+            //sb.AppendLine($"{listResponse}");
 
-            foreach (var line in helpTxt)
-            {
-                sb.AppendLine(line).Replace('!', Char.Parse(_prefix));
-            }
+            await Context.Channel.SendMessageAsync("", false, new EmbedBuilder()
+                .WithTitle($"The Cow Says: ")
+                .WithColor(new Color(0, 0, 255))
+                .WithImageUrl(imgurl)
+                //.WithThumbnailUrl($"{Context.Channel.SendFileAsync(imageUrl, null, false, null).GetAwaiter().GetResult()}")
+                .WithDescription(sb.ToString()) 
+                .Build());
+            await picture.DeleteAsync();
 
-            embed.Description = sb.ToString();
-            await _cc.Reply(Context, embed);
+            imageText.ClearImagesFromStorage();
         }
 
     }

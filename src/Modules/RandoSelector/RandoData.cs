@@ -9,7 +9,7 @@ namespace NinjaBotCore.Modules.RandoSelector
 {
     public class Rando
     {
-        public void setRandomToList(string listName, string listItem, int listItemWeight, int numberOfPlayers, string userName)
+        public void setRandomToList(string listName, string listItem, long listItemWeight, long numberOfPlayers, string userName)
         {
 
             var rando = new Randos();
