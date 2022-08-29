@@ -100,7 +100,8 @@ namespace NinjaBotCore.Modules.Giphy
                 var fileList = Directory.EnumerateFiles(imageSavePath);
                 foreach (var file in fileList)
                 {
-                    File.Delete(file);
+                    if (File.GetCreationTime(file) < DateTime.Now.AddDays(-3))
+                        File.Delete(file);
                 }
             }
 
