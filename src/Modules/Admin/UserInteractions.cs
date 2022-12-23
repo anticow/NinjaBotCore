@@ -21,8 +21,8 @@ namespace NinjaBotCore.Modules.Admin
         public UserInteraction(IServiceProvider services)
         {
             _logger = services.GetRequiredService<ILogger<UserInteraction>>();
-            services.GetRequiredService<DiscordShardedClient>().UserJoined += HandleGreeting;
-            //services.GetRequiredService<DiscordShardedClient>().UserLeft += HandleParting;
+            services.GetRequiredService<DiscordSocketClient>().UserJoined += HandleGreeting;
+            //services.GetRequiredService<DiscordSocketClient>().UserLeft += HandleParting;
             _logger.LogInformation($"UserInteractions loaded");
         }
 

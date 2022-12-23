@@ -1,5 +1,6 @@
 using Discord;
-using Discord.Commands;
+//using Discord.Commands;
+using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,8 +12,8 @@ namespace NinjaBotCore.Services
 {
     public class StartupService
     {
-        private readonly DiscordShardedClient _discord;
-        private readonly CommandService _commands;
+        private readonly DiscordSocketClient _discord;
+        private readonly InteractionService _commands;
         private readonly IConfigurationRoot _config;
         private readonly IServiceProvider _services;
 
@@ -20,13 +21,17 @@ namespace NinjaBotCore.Services
         {
             _services = services;
             _config = _services.GetRequiredService<IConfigurationRoot>();
-            _discord = _services.GetRequiredService<DiscordShardedClient>();
-            _commands = _services.GetRequiredService<CommandService>();
+            _discord = _services.GetRequiredService<DiscordSocketClient>();
+            _commands = _services.GetRequiredService<InteractionService>();
         }
 
         public async Task StartAsync()
         {
-            string discordToken = _config["Token"]; 
+#if DEBUG
+            string discordToken = _config["DevToken"];
+#else
+            string discordToken = _config["Token"];
+#endif
             if (string.IsNullOrWhiteSpace(discordToken))
             {
                 throw new Exception("Token missing from config.json! Please enter your token there (root directory)");

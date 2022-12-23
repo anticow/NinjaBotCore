@@ -23,7 +23,7 @@ namespace NinjaBotCore.Modules.Wow
         public ChannelCheck _cc;
         public WarcraftLogs _logsApi;
         public WowApi _wowApi;
-        public DiscordShardedClient _client;
+        public DiscordSocketClient _client;
         public RaiderIOApi _rioApi;
         public readonly IConfigurationRoot _config;
         public string _prefix;
@@ -36,7 +36,7 @@ namespace NinjaBotCore.Modules.Wow
             _logsApi = services.GetRequiredService<WarcraftLogs>();            
             _wowApi = services.GetRequiredService<WowApi>();
             _rioApi = services.GetRequiredService<RaiderIOApi>();
-            _client = services.GetRequiredService<DiscordShardedClient>();            
+            _client = services.GetRequiredService<DiscordSocketClient>();            
             _config = services.GetRequiredService<IConfigurationRoot>();
             _prefix = _config["prefix"];
         }

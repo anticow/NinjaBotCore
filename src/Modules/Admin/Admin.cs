@@ -18,7 +18,7 @@ namespace NinjaBotCore.Modules.Admin
     public class Admin : ModuleBase
     {                
         private static bool _isLinked = false;        
-        private static DiscordShardedClient _client;
+        private static DiscordSocketClient _client;
         private static ChannelCheck _cc;
         private readonly IConfigurationRoot _config;
         private string _prefix;
@@ -26,7 +26,7 @@ namespace NinjaBotCore.Modules.Admin
 
         public Admin(IServiceProvider services)
         {            
-            _client = services.GetRequiredService<DiscordShardedClient>();
+            _client = services.GetRequiredService<DiscordSocketClient>();
             _logger = services.GetRequiredService<ILogger<Admin>>();
             if (!_isLinked)
             {

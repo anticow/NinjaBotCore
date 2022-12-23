@@ -28,7 +28,7 @@ namespace NinjaBotCore.Modules.Wow
         private static List<Zones> _classicZones;
         private static List<CharClasses> _charClasses;
         private readonly IConfigurationRoot _config;
-        private DiscordShardedClient _client;
+        private DiscordSocketClient _client;
         private readonly WclApiRequestor _api;
         private readonly WclApiRequestor _apiCmd;        
         private readonly WclApiRequestor _apiClassicCmd;        
@@ -40,7 +40,7 @@ namespace NinjaBotCore.Modules.Wow
         public WarcraftLogs(IServiceProvider services)
         {
             _logger = services.GetRequiredService<ILogger<WarcraftLogs>>();
-            _client = services.GetRequiredService<DiscordShardedClient>();
+            _client = services.GetRequiredService<DiscordSocketClient>();
             _config = services.GetRequiredService<IConfigurationRoot>(); 
             _wowApi = services.GetRequiredService<WowApi>();
                         

@@ -16,10 +16,10 @@ namespace NinjaBotCore.Modules.Away
     {
         private static bool _isLinked = false;
         private static ChannelCheck _cc = null;
-        private static DiscordShardedClient _client;
+        private static DiscordSocketClient _client;
         private readonly ILogger _logger;
         //Work on way to do this when bot starts
-        public AwayCommands(DiscordShardedClient client, ILogger<AwayCommands> logger)
+        public AwayCommands(DiscordSocketClient client, ILogger<AwayCommands> logger)
         {
             _logger = logger;
             if (!_isLinked)
